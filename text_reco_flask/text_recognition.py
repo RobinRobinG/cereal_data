@@ -154,6 +154,7 @@ def LetterFinding(database,imglocation,padding):
 
     # sort the results bounding box coordinates from top to bottom
     results = sorted(results, key=lambda r:r[0][1])
+    words = []
     for result in results :
-        print(result[1])
-    return results
+        words.append(result[1])
+    return words
