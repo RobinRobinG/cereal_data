@@ -9,6 +9,9 @@ import pytesseract
 import argparse
 import cv2
 import numpy
+import base64
+import io
+
 
 def decode_predictions(scores, geometry):
 	# grab the number of rows and columns from the scores volume, then
@@ -68,10 +71,13 @@ def decode_predictions(scores, geometry):
 	return (rects, confidences)
 
 def LetterFinding(database,imglocation,padding):
-    print(imglocation)
-    image = cv2.imdecode(numpy.fromstring(imglocation.read(), numpy.uint8), cv2.IMREAD_UNCHANGED)
-    # load the input image and grab the image dimensions
-    #image = cv2.imread(imglocation)
+    # Receive the image in dashe's base64 string, we decode it into actual bytes.
+    jpg_original = base64.b64decode(imglocation)
+    # transform the decoded base64 into a np array of colors. 
+    jpg_as_np = np.fromstring(jpg_original, dtype=np.uint8)
+    # decode the array back into an image for opencv.
+    image = cv2.imdecode(jpg_as_np, cv2.IMREAD_UNCHANGED)
+    
     orig = image.copy()
     (origH, origW) = image.shape[:2]
 
