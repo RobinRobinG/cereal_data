@@ -1,5 +1,8 @@
 __pycache__
 venv
 data/.DS_Store
+<<<<<<< HEAD
 .vs/slnx.sqlite
+=======
+>>>>>>> 591aaa432d75460000cf793a1965b587ede41633
 .vs/
