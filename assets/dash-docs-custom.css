@@ -1,7 +1,9 @@
 body {
-  color: #506784;
-  background-color: #ecf0f1;
-    /*url("https://github.com/plotly/dash-docs/raw/master/images/dash-pattern.png");*/
+  color: #333;
+  background: #AAFFA9;  /* fallback for old browsers */
+  background: -webkit-linear-gradient(45deg, #AAFFA9, #11FFBD);  /* Chrome 10-25, Safari 5.1-6 */
+  background: linear-gradient(45deg, #AAFFA9, #11FFBD); /* W3C, IE 10+/ Edge, Firefox 16+, Chrome 26+, Opera 12+, Safari 7+ */
+
   margin: 0px;
 }
 
@@ -236,4 +238,21 @@ h1, h2, h3, h4, h5, h6 {
      width: 80%;
      max-width: 960px;
   }
+}
+
+h1 {
+  font-size: 2em;
+  font-weight: 500;
+  margin: 50px 0;
+}
+
+.main-content {
+  width: 60%;
+  margin: 250px auto;
+  height: 80%;
+}
+
+#input {
+  margin-bottom: 40px;
+
 }
