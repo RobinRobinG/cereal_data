@@ -280,9 +280,22 @@ h1 {
 rect .bg {
   fill: rgb(255,255,255,0) !important;
   }
-img #uploaded_image {
-  width: 300px;
+
+.uploaded_content {
+  text-align: center;
 }
-
-
+.uploaded_imgage {
+  text-align: center;
+}
+.uploaded_imgage img {
+  width:200px !important;
+  height: auto;
+}
+.box_and_text {
+  display:flex;
+  justify-content: space-around;
+  align-items: center;
+  font-size: 50px !important;
+  text-decoration: underline;
+}
 

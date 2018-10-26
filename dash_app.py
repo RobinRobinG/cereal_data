@@ -23,14 +23,14 @@ url_bar_and_content_div = html.Div([
 
 
 layout_index = html.Div([
-    dcc.Link(   'Navigate to "/page-1"', href='/page-1', className='button'),
-    dcc.Link(   'Navigate to "/page-2"', href='/page-2', className='button'),
+    dcc.Link(   'Cereal Calorie Compare', href='/page-1', className='button'),
+    dcc.Link(   'Nutrition Facts', href='/page-2', className='button'),
 ])
 
 
 layout_page_1 = html.Div(   children=[
-                html.Div(   children=[  html.H1(    children='Cereal Calorie Tracker'),
-                                        dcc.Link(   children='UPLOAD IMAGE', 
+                html.Div(   children=[  html.H1(    children='Cereal Calorie Compare'),
+                                        dcc.Link(   children='Nutrition Facts', 
                                                     href='/page-2',
                                                     className='button')],className="heading"),
                 dcc.Dropdown(
@@ -47,8 +47,8 @@ layout_page_1 = html.Div(   children=[
 
 words = []
 layout_page_2 = html.Div(   children=[
-                html.Div(   children=[  html.H1(    children='Cereal Calorie Tracker'),
-                                        dcc.Link(   children=   'ENTER TEXT', 
+                html.Div(   children=[  html.H1(    children='Nutrition Facts'),
+                                        dcc.Link(   children=   'Calorie Compare', 
                                                     href='/page-1',
                                                     className='button')],className="heading"),
                dcc.Upload(
@@ -152,20 +152,24 @@ def parse_contents(contents, filename, date):
         html.H5(filename),
         # HTML images accept base64 encoded strings in the same format
         # that is supplied by the upload
-        html.Img(   src=contents,
-                    id='uploaded_image',
-                    style={'width': '200px'}),
-        html.Div(   children=[
-        dcc.Input(  id='input_2', 
-                    value=words[max_index], 
-                    type='text',
-                    style={'display': 'none'})]
-                 ),
-        html.Pre(words[max_index], style={
-            'whiteSpace': 'pre-wrap',
-            'wordBreak': 'break-all'
-        })
-    ])
+        html.Div([
+
+                
+                html.Div(   children=[
+                  dcc.Input(  id='input_2',
+                            value=words[max_index],
+                            type='text',
+                            style={'display': 'none'})
+                  ]),
+                html.Div([  html.Img(   src=contents,
+                                        id='uploaded_image', 
+                                        style= {'width': '300px'})], className ='uploaded_image'),
+                html.P(words[max_index], 
+                    style={ 'whiteSpace': 'pre-wrap', 'wordBreak': 'break-all'},
+                    className='text_out', 
+                )
+        ],className ='box_and_text')
+    ],className ='uploaded_content')
 
 
 @app.callback(
@@ -180,13 +184,17 @@ def update_graph(user_input):
             id='allcereals_rating',
             figure={
                 'data': [
-                    {'x': df_filtered.name, 'y': df_filtered.calories/df_filtered.cups, 'type':'bar', 'name':'Calories per serving'},
+                    #{'x': df_filtered.name, 'y': df_filtered.calories/df_filtered.cups, 'type':'bar', 'name':'Calories per serving'},
                     {'x': df_filtered.name, 'y': df_filtered.fiber/df_filtered.cups, 'type':'bar', 'name':'Fiber per serving', },
                     {'x': df_filtered.name, 'y': df_filtered.sugars/df_filtered.cups, 'type':'bar', 'name':'Sugar per serving', },
+                    {'x': df_filtered.name, 'y': df_filtered.protein/df_filtered.cups, 'type':'bar', 'name':'Protein per serving', },
+                    {'x': df_filtered.name, 'y': df_filtered.fat/df_filtered.cups, 'type':'bar', 'name':'Fat per serving', },
+                    {'x': df_filtered.name, 'y': df_filtered.sodium/df_filtered.cups/1000, 'type':'bar', 'name':'Sodium per serving', },
+                    {'x': df_filtered.name, 'y': df_filtered.carbo/df_filtered.cups, 'type':'bar', 'name':'Carbo per serving', },
 
                 ],
                 'layout': {
-                    'title': 'Calories per cup',
+                    'title': 'Grams in a cup',
                     'paper_bgcolor': 'rgb(255,255,255,0.3)',
                     'plot_bgcolor': 'rgba(0,0,0,0)',
                     'legend': dict(orientation='h'),
