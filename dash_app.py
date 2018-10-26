@@ -6,6 +6,9 @@ import dash_core_components as dcc
 import dash_html_components as html
 from dash.dependencies import Input, Output, State
 import pandas as pd
+import re
+
+
 cereal_df = pd.read_csv("data/cereal.csv")
 
 external_stylesheets = ['https://codepen.io/chriddyp/pen/bWLwgP.css']
@@ -55,9 +58,20 @@ def parse_contents(contents, filename, date):
     words = LetterFinding("text_reco_flask/frozen_east_text_detection.pb",contents[23:], 0.05)
     #only consider de first word that appears.
     index = 0;
-    while(len(words[index]) < 3):
+    max_index=0;
+    max_results =0;
+    while(index < len(words)):
+        cleanString = re.sub('\W+','', words[index] )
+        print(cleanString)
+        df_filtered = cereal_df.query('name.str.contains("'+cleanString+'",False)')
+        results = len(df_filtered)
+        print(results)
+        if(len(cleanString) > 2 and results > max_results):
+            max_results = results
+            max_index = index
         index+=1
-
+    print(words[max_index])
+    print(max_results)
     return html.Div([
         html.H5(filename),
         # HTML images accept base64 encoded strings in the same format
@@ -66,11 +80,11 @@ def parse_contents(contents, filename, date):
         html.Hr(),
         html.Div(children=[
                 dcc.Input(  id='input_2', 
-                            value=words[index], 
+                            value=words[max_index], 
                             type='text',
                             style={'display': 'none'})]
                  ),
-        html.Pre(words[index], style={
+        html.Pre(words[max_index], style={
             'whiteSpace': 'pre-wrap',
             'wordBreak': 'break-all'
         })
@@ -81,7 +95,7 @@ def parse_contents(contents, filename, date):
     [Input(component_id='input', component_property='value')])
 def update_graph(user_input):
     if(len(user_input) >0):
-        df_filtered = cereal_df.query('name.str.contains("'+user_input+'")')
+        df_filtered = cereal_df.query('name.str.contains("'+user_input+'",False)')
         return dcc.Graph(
 
             id='allcereals_rating',
@@ -103,7 +117,8 @@ def update_graph(user_input):
     [Input(component_id='input_2', component_property='value')])
 def update_graph(user_input):
     if(len(user_input) >0):
-        df_filtered = cereal_df.query('name.str.contains("'+user_input+'")')
+        cleanString = re.sub('\W+','', user_input)
+        df_filtered = cereal_df.query('name.str.contains("'+cleanString+'",False)')
         return dcc.Graph(
 
             id='allcereals_rating',
