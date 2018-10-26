@@ -32,8 +32,9 @@ layout_page_1 = html.Div(children=[
                 dcc.Dropdown(
                             id='input',
                             options=[{'label': i, 'value': i} for i in cereal_df.name],
+                            multi=True,
                             placeholder='Enter a cereal name',
-                            value=''),
+                            value=['All-Bran','Almond Delight']),
                 html.Div(   id='output-graph'),
                 html.Br(),
                 dcc.Link('Navigate to "/"', href='/'),
@@ -104,24 +105,31 @@ def display_page(pathname):
     Output(component_id='output-graph', component_property='children'),
     [Input(component_id='input', component_property='value')])
 def update_graph(user_input):
-    if(len(user_input) >0):
-        df_filtered = cereal_df.query('name.str.contains("'+user_input+'")')
-        return dcc.Graph(
-
-            id='text',
-            figure={
-                'data': [
-                    {'x': df_filtered.name, 'y': df_filtered.calories, 'type':'bar', 'name':'Calories per serving'},
-                    {'x': df_filtered.name, 'y': df_filtered.fiber, 'type':'bar', 'name':'Fiber per serving', },
-                    {'x': df_filtered.name, 'y': df_filtered.sugars, 'type':'bar', 'name':'Sugar per serving', },
-                ],
-                'layout': {
-                    'title': 'Nutritionals per 100g',
-                    'paper_bgcolor': 'rgba(0,0,0,0)',
-                    'plot_bgcolor': 'rgba(0,0,0,0)'
+    graphs = []
+    if not user_input:
+        graphs.append(html.H3(
+            "Select a cereal brand.",
+            style={'marginTop': 20, 'marginBottom': 20}
+        ))
+    else:
+        traces = []
+        for i, user_input in enumerate(user_input):
+            df_filtered = cereal_df[cereal_df['name'] == user_input]
+            traces.append({'x':df_filtered.name, 'y':(df_filtered.calories/df_filtered.cups), 'name': user_input, 'type':'bar'})       
+    return dcc.Graph(
+        id='user_input',
+        figure={
+            'data':traces
+            ,
+            'layout': {
+                'title': 'Calories per cup',
+                'paper_bgcolor': 'rgba(0,0,0,0)',
+                'plot_bgcolor': 'rgba(0,0,0,0)'
+                    }
                 }
-            }
-        )
+            )
+            
+       
 
 # Page 2 callbacks
 def parse_contents(contents, filename, date):
