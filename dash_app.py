@@ -19,14 +19,19 @@ app.config['suppress_callback_exceptions'] = True
 words = []
 
 app.layout = html.Div(children=[
-                html.H2(    children='User Input',
-                            ),
-
+                html.H2(    children='User Input'),
                 dcc.Input(  id='input', 
                             value='', 
+                            name= 'cereal',
                             placeholder='Enter a cereal name',
                             type='text',
-                            style={'width': 300}),
+                            className='input'),
+
+                dcc.Dropdown(
+                            id='y-axis-input',
+                            options=[{'label': i, 'value': i} for i in cereal_df[:3]],
+                            value='',
+                            className='input'),
                dcc.Upload(
                     id='upload-image',
                     children=html.Div([
@@ -52,6 +57,7 @@ app.layout = html.Div(children=[
 
                 html.Div(   id='output-graph2', 
                             style={'margin': 30}),
+
 ],style={'text-align':'center'})
 
 def parse_contents(contents, filename, date):
@@ -134,7 +140,6 @@ def update_graph(user_input):
                 }
             }
         )
-
 @app.callback(Output('output-image-upload', 'children'),
               [Input('upload-image', 'contents')],
               [State('upload-image', 'filename'),
@@ -146,8 +151,6 @@ def update_output(list_of_contents, list_of_names, list_of_dates):
             parse_contents(c, n, d) for c, n, d in
             zip(list_of_contents, list_of_names, list_of_dates)]
         return children
-
-
 
 
 @server.route('/')
