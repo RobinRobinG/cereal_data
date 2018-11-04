@@ -10,8 +10,8 @@ cereal_df = pd.read_csv("data/cereal.csv")
 
 
 
-#server = Flask(__name__)
-app = dash.Dash(__name__)
+server = flask.Flask(__name__)
+app = dash.Dash(__name__, server=server)
 app.config.requests_pathname_prefix = '' 
 app.config.suppress_callback_exceptions = True
 
